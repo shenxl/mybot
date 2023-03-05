@@ -32,12 +32,13 @@ class BotStatus(Enum):
 
 
 class ReplyBot:
-    def __init__(self, data: Dict):
+    def __init__(self, data: Dict, key):
         self.chatid = data.get("chatid")
         self.creator = data.get("creator")
         self.content = data.get("content")
         self.robot_key = data.get("robot_key")
         self.url = data.get("url")
+        self.hook_key = key
         self.ctime = data.get("ctime")
         self.replyMsg = ''
         # 初始化机器人
@@ -66,12 +67,9 @@ class ReplyBot:
         # 初始化逻辑
         command_type, command_arg = parse_command(self.content)
         if command_type == CommandType.INIT:
-            parsed_url = urlparse(self.url)
-            query_params = parse_qs(parsed_url.query)
-            if 'key' in query_params:
+            if self.hook_key:
                 # 将 url 和 key 拼接成完整的 hook_url，并注册机器人
-                key_value = query_params['key'][0]
-                hook_url = get_config().WOA_URL + key_value
+                hook_url = get_config().WOA_URL + self.hook_key
                 # logger.info(f"key:{self.robot_key},chatid:{self.chatid},hook:{hook_url}")
                 bots.add_bot(self.robot_key, self.chatid,hook_url)
                 self.rebot = bots.get_bot(self.robot_key)

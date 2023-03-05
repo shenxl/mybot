@@ -12,9 +12,9 @@ class Chat(Resource):
     def post(self):
         # 获取请求数据
         data = request.json
-        
+        key = data.get('key')
         # 创建 ReplyBot 对象并初始化
-        replybot = ReplyBot(data)
+        replybot = ReplyBot(data,key)
         reply = replybot.reply()
         message = ""
         if reply == BotStatus.REGISTRATION_FAILED:
