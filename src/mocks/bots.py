@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 class mockBot:
     def __init__(self):

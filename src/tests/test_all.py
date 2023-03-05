@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import unittest
 
 # 加载所有测试用例

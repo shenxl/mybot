@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import openai
 import json
 import tiktoken
