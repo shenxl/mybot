@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 from flask import request
 from flask_restful import Resource
 from src.replybot import ReplyBot, BotStatus
@@ -7,13 +8,18 @@ from src.logs.logger import Logger
 logger = Logger(__name__)
 class Chat(Resource):
     def get(self, key=None):
-        return {"result": "ok"}
+        if key:
+            # Do something with key
+            return {'result': 'ok'}
+        else:
+            return {"result": "ok"}
+
     
     def post(self, key=None):
         # 获取请求数据
         data = request.json
-        key = data.get('key')
         # 创建 ReplyBot 对象并初始化
+        logger.info(json.dumps(data))
         replybot = ReplyBot(data,key)
         reply = replybot.reply()
         message = ""
