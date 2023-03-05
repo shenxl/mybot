@@ -8,11 +8,7 @@ from src.logs.logger import Logger
 logger = Logger(__name__)
 class Chat(Resource):
     def get(self, key=None):
-        if key:
-            # Do something with key
-            return {'result': 'ok'}
-        else:
-            return {"result": "ok"}
+        return {"result": "ok"}
 
     
     def post(self, key=None):

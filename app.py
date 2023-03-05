@@ -8,7 +8,7 @@ app = Flask(__name__)
 api = Api(app)
 
 # 添加 Chat 资源到 Flask-RESTful
-api.add_resource(Chat, "/chat")
+api.add_resource(Chat, '/chat', '/chat/<string:key>')
 
 # 运行 Flask 应用
 if __name__ == "__main__":
