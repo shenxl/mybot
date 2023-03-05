@@ -40,7 +40,7 @@ class TestCommands(unittest.TestCase):
         self.assertEqual(parse_command("@foo %instrs set #name% ") , (CommandType.INSTRS_SET, "#name"))
 
         # 测试 instrs set指令
-        self.assertEqual(parse_command("@foo %instrs set #name% ") , (CommandType.INSTRS_SET,None))
+        self.assertEqual(parse_command("@foo %instrs set% ") , (CommandType.INSTRS_SET,None))
 
         # 测试 instrs cls #xxx 指令
         self.assertEqual(parse_command("@foo %instrs cls %") , (CommandType.INSTRS_CLS, None))
