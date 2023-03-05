@@ -1,0 +1,14 @@
+/src/private/
+/src/conf/conf_dev.py
+# Other
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+*.pyo
