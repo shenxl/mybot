@@ -6,10 +6,10 @@ from src.logs.logger import Logger
 
 logger = Logger(__name__)
 class Chat(Resource):
-    def get(self):
+    def get(self, key=None):
         return {"result": "ok"}
     
-    def post(self):
+    def post(self, key=None):
         # 获取请求数据
         data = request.json
         key = data.get('key')
