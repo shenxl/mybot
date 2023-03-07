@@ -1,5 +1,5 @@
-/src/private/
-/src/conf/conf_dev.py
+/app/private/
+/conf/conf_dev.py
 # Other
 .idea/
 .vscode/
