@@ -46,20 +46,20 @@ class Firebase:
 
 
 class Bots:
-    def __init__(self, db=None):
+    def __init__(self, db=None,collection_name=u"bots"):
         if db is None:
             self.db = Firebase.getInstance().db
         else:
             self.db = db
-        self.collection_name = "bots"
+        self.collection_name = collection_name
 
     def add_bot(self, robot_key, chat_id, hook):
         doc_ref = self.db.collection(self.collection_name).document(robot_key)
         doc_ref.set({
-            "robot_key": robot_key,
-            "chat_id": chat_id,
-            "hook": hook,
-            "created": firestore.SERVER_TIMESTAMP
+            u"robot_key": robot_key,
+            u"chat_id": chat_id,
+            u"hook": hook,
+            u"created": firestore.SERVER_TIMESTAMP
         })
         
     def get_bot(self, robot_key):
@@ -77,13 +77,13 @@ class SKs:
             self.db = Firebase.getInstance().db
         else:
             self.db = db
-        self.collection_name = "sks"
+        self.collection_name = u"sks"
 
     def add_sk(self, sk):
         doc_ref = self.db.collection(self.collection_name).document(sk)
         doc_ref.set({
-            "sk": sk,
-            "used": False
+            u"sk": sk,
+            u"used": False
         })
     def get_by_sk(self, sk):
         doc_ref = self.db.collection(self.collection_name).document(sk)
@@ -94,21 +94,22 @@ class SKs:
             return None
 
 class Chats:
-    def __init__(self,  db=None):
+    def __init__(self,  db=None, collection_name=u"chats"):
         if db is None:
             self.db = Firebase.getInstance().db
         else:
             self.db = db
-        self.collection_name = "chats"
+        self.collection_name = collection_name
 
-    def add_message(self, userID, role, content, parentid=None):
+    def add_message(self, userID, role, content,robot_key, parentid=None):
         doc_ref = self.db.collection(self.collection_name).document()
         doc_ref.set({
-            "userID": userID,
-            "role": role,
-            "created": firestore.SERVER_TIMESTAMP,
-            "content": content,
-            "parentid": parentid if parentid is not None else '',
+            u"userID": userID,
+            u"role": role,
+            u"created": firestore.SERVER_TIMESTAMP,
+            u"content": content,
+            u"robot_key":robot_key,
+            u"parentid": parentid if parentid is not None else '',
         })
         return doc_ref.id
 

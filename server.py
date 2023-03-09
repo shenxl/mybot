@@ -1,12 +1,10 @@
-# -*- coding: utf-8 -*-
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 import os
 import sys
-import logging
+import argparse
+import signal
+import subprocess
 from flask import Flask
 from flask_restful import Api
-from flask_script import Manager
 from routes.chat import Chat
 
 # 初始化 Flask 和 Flask-RESTful
@@ -16,37 +14,42 @@ api = Api(app)
 # 添加 Chat 资源到 Flask-RESTful
 api.add_resource(Chat, '/chat', '/chat/<string:key>')
 
-# 配置日志记录
-log_file = '/var/log/myapp.log'
-if not os.path.exists(os.path.dirname(log_file)):
-    os.makedirs(os.path.dirname(log_file))
-handler = logging.FileHandler(log_file)
-handler.setLevel(logging.INFO)
-app.logger.addHandler(handler)
+def start_server(bind, workers, log_path):
+    """
+    启动 Gunicorn 服务器
+    """
+    cmd = f"gunicorn server:app -w {workers} -b {bind} --access-logfile {log_path}"
+    subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-# 使用 Flask-Script 扩展管理应用程序
-manager = Manager(app)
+def stop_server():
+    """
+    停止 Gunicorn 服务器
+    """
+    with open("gunicorn.pid", "r") as f:
+        pid = int(f.read())
+    os.kill(pid, signal.SIGTERM)
 
-# 添加启动命令
-@manager.command
-def run():
-    """启动服务器"""
-    bind = '0.0.0.0:5000'
-    workers = 4
-    command = 'gunicorn -w {0} -b {1} app:app'.format(workers, bind)
-    os.system('nohup {0} > /dev/null 2>&1 &'.format(command))
+def restart_server(bind, workers, log_path):
+    """
+    重启 Gunicorn 服务器
+    """
+    stop_server()
+    start_server(bind, workers, log_path)
 
-# 添加停止命令
-@manager.command
-def stop():
-    """停止服务器"""
-    command = 'killall gunicorn\n'
-    os.system(command)
-
-if __name__ == '__main__':
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--bind', dest='bind', help='服务监听的 IP 和端口', default='0.0.0.0:8000')
+    parser.add_argument('--workers', dest='workers', help='进程数', default=4, type=int)
+    parser.add_argument('--log-path', dest='log_path', help='日志文件路径', default='/var/log/gunicorn/access.log')
+    
+    args = parser.parse_args()
 
     env = os.environ.get('ENV')
     if env != 'prod':
         app.run(debug=True)
     else:
-        manager.run()
+        # 生产环境下使用 nohup 启动 Gunicorn 服务器并写入 pid 文件
+        cmd = f"gunicorn server:app -w {args.workers} -b {args.bind} --access-logfile {args.log_path}"
+        pid_file = "gunicorn.pid"
+        with open(pid_file, "w") as f:
+            subprocess.Popen(f"nohup {cmd} > /dev/null 2>&1 & echo $!", shell=True, stdout=f)

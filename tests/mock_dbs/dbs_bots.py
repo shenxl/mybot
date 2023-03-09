@@ -2,8 +2,8 @@
 
 import unittest
 from unittest import mock   # 添加这一行导入语句
-from fixtures.firebase_mock import create_mock_firestore, MockFirebase
-from fixtures.test_data import BOT_DATA
+from ..fixtures.firebase_mock import create_mock_firestore, MockFirebase
+from ..fixtures.mock_data import BOT_DATA
 from dbs.firedb import Bots
 
 

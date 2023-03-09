@@ -2,8 +2,8 @@
 
 import unittest
 from unittest import mock
-from fixtures.firebase_mock import create_mock_firestore, MockFirebase
-from fixtures.test_data import CHAT_DATA
+from ..fixtures.firebase_mock import create_mock_firestore, MockFirebase
+from ..fixtures.mock_data import CHAT_DATA
 from dbs.firedb import Chats
 
 class TestDBChats(unittest.TestCase):

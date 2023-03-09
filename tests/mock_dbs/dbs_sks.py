@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import unittest
-from fixtures.firebase_mock import create_mock_firestore, MockFirebase
-from fixtures.test_data import SK_DATA
+from ..fixtures.firebase_mock import create_mock_firestore, MockFirebase
+from ..fixtures.mock_data import SK_DATA
 from dbs.firedb import SKs
 
 class TestDBSKs(unittest.TestCase):
