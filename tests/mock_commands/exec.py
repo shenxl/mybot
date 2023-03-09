@@ -10,14 +10,22 @@ from commands.message import MessageCommandStrategy
 
 class TestCommandExecutor(unittest.TestCase):
     def setUp(self):
+        rebot = {
+            "userID": "user2",
+            "robot_key": "robot1",
+            "role": "assistant",
+            "content": "content2",
+            "parentid": None,
+        }
+        
         self.executor = CommandExecutor()
         # self.executor.add_strategy(CommandType.CHATS_CLS, ChatsClsCommandStrategy())
-        self.executor.add_strategy(CommandType.INIT, InitCommandStrategy())
+        self.executor.add_strategy(CommandType.INIT, InitCommandStrategy(rebot=rebot))
         # self.executor.add_strategy(CommandType.INSTRS, InstrsCommandStrategy())
         # self.executor.add_strategy(CommandType.INSTRS_SET, InstrsSetCommandStrategy())
         # self.executor.add_strategy(CommandType.INSTRS_CLS, InstrsClsCommandStrategy())
-        self.executor.add_strategy(CommandType.REKEY, RekeyCommandStrategy())
-        self.executor.add_strategy(CommandType.MSG, MessageCommandStrategy())
+        self.executor.add_strategy(CommandType.REKEY, RekeyCommandStrategy(rebot=rebot))
+        self.executor.add_strategy(CommandType.MSG, MessageCommandStrategy(rebot=rebot))
         # self.executor.add_strategy(CommandType.HELP, HelpCommandStrategy())
 
     # def test_chats_cls(self):
@@ -34,7 +42,7 @@ class TestCommandExecutor(unittest.TestCase):
 
     def test_init(self):
         result = self.executor.execute("@xxx %init%")
-        self.assertEqual(result, "机器人已初始化完成")
+        self.assertEqual(result, "机器人user2已初始化完成")
 
     # def test_instrs(self):
     #     result = self.executor.execute("@xxx %instrs%")
@@ -64,7 +72,7 @@ class TestCommandExecutor(unittest.TestCase):
 
     def test_rekey(self):
         result = self.executor.execute("@xxx %rekey%")
-        self.assertEqual(result, "秘钥更换完成")
+        self.assertEqual(result, "user2秘钥更换完成")
 
     # def test_help(self):
     #     result = self.executor.execute("@xxx %help%")
@@ -73,7 +81,7 @@ class TestCommandExecutor(unittest.TestCase):
         
     def test_message(self):
         result = self.executor.execute("@xxx hello world")
-        self.assertEqual(result, "hello world")
+        self.assertEqual(result, "user2say:hello world")
 
 if __name__ == '__main__':
     unittest.main()

@@ -50,7 +50,40 @@ class TestDBChats(unittest.TestCase):
         
         user_ids = list({item["userID"] for item in CHAT_DATA})
         for id in user_ids:
-            chats.clear_by_userID(chat["userID"])
+            chats.clear_by_userID(id)
+    
+    def test_get_by_userID_role(self):
+        search_chat = CHAT_DATA[0]
+        for chat in CHAT_DATA:
+            chats.add_message(userID=chat["userID"], role=chat["role"], 
+                robot_key=chat["robot_key"], content=chat["content"], parentid=chat["parentid"])
+        db_records = chats.get_by_role(search_chat["userID"], search_chat["role"])
+        
+        
+        source_result = [item for item in CHAT_DATA if item["userID"] == search_chat["userID"] 
+                            and item["role"] == search_chat["role"] ]
+        # source_result_str = str(source_result)
+        # db_records_str = str(db_records)
+        # # 使用 assertEqual 比较它们的字符串表示
+        # self.assertEqual(source_result_str, db_records_str)
+        
+        # 每次获取的列表与原列表中的值相同
+        self.assertEqual(len(db_records), len(source_result))
+        
+        user_ids = list({item["userID"] for item in CHAT_DATA})
+        for id in user_ids:
+            chats.clear_by_userID(id)
+    
+    def test_clear_chats(self):
+            
+        user_ids = list({item["userID"] for item in CHAT_DATA})
+        for id in user_ids:
+            chats.clear_by_userID(id)
+            record = chats.get_by_userID(id)
+            self.assertEqual(len(record), 0)
+                
+        
+        
         
         
 

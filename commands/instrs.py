@@ -4,7 +4,7 @@ from .executor import CommandStrategy, CommandType
 class InstrsCommandStrategy(CommandStrategy):
     def __init__(self, executor):
         self.executor = executor
-
+        
     def execute(self, command_arg):
         if command_arg:
             # 显示指定指令的使用示例

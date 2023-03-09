@@ -1,11 +1,12 @@
 from .parse import CommandType,parse_command
 
 class CommandExecutor:
-    def __init__(self):
+    def __init__(self, rebot=None):
         # CommandType 是一个枚举类，表示命令的类型，并且 `NullCommandStrategy` 是该命令类型的默认策略
         self.strategies = {command_type: NullCommandStrategy() for command_type in CommandType}
         self.instruction_desc = {command_type: '' for command_type in CommandType}
         self.instruction_example = {command_type: '' for command_type in CommandType}
+        self.rebot = rebot
 
     def add_strategy(self, command_type, command_strategy):
         self.strategies[command_type] = command_strategy
@@ -42,6 +43,8 @@ class CommandExecutor:
 # """
 
 class CommandStrategy:
+    def __init__(self, rebot=None):
+        self.rebot = rebot
     def execute(self, command_arg):
         raise NotImplementedError
 
@@ -72,7 +75,8 @@ class HelpCommandStrategy(CommandStrategy):
 class RekeyCommandStrategy(CommandStrategy):
     def execute(self, command_arg):
         # TODO: 实现秘钥更换的逻辑
-        return "秘钥更换完成"
+        username = self.rebot["userID"]
+        return f"{username}秘钥更换完成"
 
 
 class UnknownCommandStrategy(CommandStrategy):

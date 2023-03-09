@@ -46,7 +46,7 @@ class Firebase:
 
 
 class Bots:
-    def __init__(self, db=None,collection_name=u"bots"):
+    def __init__(self, db=None, collection_name=u"bots"):
         if db is None:
             self.db = Firebase.getInstance().db
         else:
@@ -54,7 +54,9 @@ class Bots:
         self.collection_name = collection_name
 
     def add_bot(self, robot_key, chat_id, hook):
-        doc_ref = self.db.collection(self.collection_name).document(robot_key)
+        doc_ref = self.db.collection(self.collection_name)
+        doc_ref = doc_ref.document(robot_key)
+        
         doc_ref.set({
             u"robot_key": robot_key,
             u"chat_id": chat_id,
@@ -63,7 +65,9 @@ class Bots:
         })
         
     def get_bot(self, robot_key):
-        doc_ref = self.db.collection(self.collection_name).document(robot_key)
+        doc_ref = self.db.collection(self.collection_name)
+        doc_ref = doc_ref.document(robot_key)
+        
         doc = doc_ref.get()
         if doc.exists:
             return doc.to_dict()
@@ -71,22 +75,25 @@ class Bots:
             return None
 
 class SKs:
-    def __init__(self, db=None):
+    def __init__(self, db=None, collection_name=u"sks"):
         
         if db is None:
             self.db = Firebase.getInstance().db
         else:
             self.db = db
-        self.collection_name = u"sks"
+        self.collection_name = collection_name
 
     def add_sk(self, sk):
-        doc_ref = self.db.collection(self.collection_name).document(sk)
+        doc_ref = self.db.collection(self.collection_name)
+        doc_ref = doc_ref.document(sk)
         doc_ref.set({
             u"sk": sk,
             u"used": False
         })
+        
     def get_by_sk(self, sk):
-        doc_ref = self.db.collection(self.collection_name).document(sk)
+        doc_ref = self.db.collection(self.collection_name)
+        doc_ref = doc_ref.document(sk)
         doc = doc_ref.get()
         if doc.exists:
             return doc.to_dict()
@@ -106,24 +113,40 @@ class Chats:
         doc_ref.set({
             u"userID": userID,
             u"role": role,
-            u"created": firestore.SERVER_TIMESTAMP,
             u"content": content,
             u"robot_key":robot_key,
             u"parentid": parentid if parentid is not None else '',
+            u"created": firestore.SERVER_TIMESTAMP,
         })
         return doc_ref.id
 
     def delete_by_id(self, record_id):
-        doc_ref = self.db.collection(self.collection_name).document(record_id)
+        doc_ref = self.db.collection(self.collection_name)
+        doc_ref = doc_ref.document(record_id)
+        
         doc_ref.delete()
         
     def get_by_userID(self, userID):
-        query = self.db.collection(self.collection_name).where("userID", "==", userID).order_by("created")
+        query = self.db.collection(self.collection_name)
+        query = query.where(u"userID", "==", userID)
+        query = query.order_by(u"created")
+        
+        docs = query.stream()
+        return [doc.to_dict() for doc in docs]
+    
+    def get_by_role(self, userID, role):
+        query = self.db.collection(self.collection_name)
+        query = query.where(u"userID", "==", userID)
+        query = query.where(u"role", "==", role)
+        query = query.order_by(u"created")
+        
         docs = query.stream()
         return [doc.to_dict() for doc in docs]
     
     def clear_by_userID(self, userID):
-        query = self.db.collection(self.collection_name).where('userID', '==', userID)
+        query = self.db.collection(self.collection_name)
+        query = query.where(u"userID", "==", userID)
+        
         docs = query.stream()
         for doc in docs:
             doc.reference.delete()
