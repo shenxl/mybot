@@ -1,4 +1,12 @@
 from .executor import CommandStrategy, CommandType
+from dbs.prompts import Prompts
+from logs.logger import Logger
+from app.botstatus import BotStatus
+
+# 设置日志
+logger = Logger(__name__)
+
+prompts = Prompts()
 
 # TODO： 思考指令相关的逻辑
 class InstrsCommandStrategy(CommandStrategy):
@@ -19,24 +27,33 @@ class InstrsCommandStrategy(CommandStrategy):
 
         
 class InstrsSetCommandStrategy(CommandStrategy):
-    def __init__(self, robot, executor):
+    def __init__(self, executor):
         self.executor = executor
 
     def execute(self, robot, command_arg):
         parts = command_arg.split(maxsplit=1)
-        command_type_str = parts[0].upper()
         if len(parts) > 1:
-            desc = parts[1]
-            if desc:
-                if command_type_str.startswith("#") and len(command_type_str) > 1:
-                    # 自动为指令命名
-                    name = command_type_str[1:] if len(command_type_str) <= 9 else command_type_str[1:9]
-                    command_type = CommandType[f"{name.upper()}_SET"]
-                else:
-                    command_type = CommandType[f"{command_type_str}_SET"]
-                self.executor.set_instruction_desc(command_type, desc)
-                return f"{command_type.name.lower()} 描述已更新"
-        return f"指令 {command_type_str.lower()} 不存在"
+            instrs_name = parts[0].lower()
+            instrs_content = parts[0].lower()
+            des = "ts"
+            
+            title = "🤖 <font color='#404040'>指令设置完成</font>"
+            info = f"- ⌨️指令{instrs_name}已经设置完成，作用是进行翻译 \n\n - 可以通过@机器人 **>{instrs_name}<翻译内容** 触发指令"
+            message = {
+                "msgtype": "markdown",
+                "markdown": {
+                    "text": f"#### {title}  \n\n{info}"
+                }
+            }
+            return (message, None) , BotStatus.INSTRS_SET_SUCCESS
+        
+        message = {
+            "msgtype": "text",
+            "text": {
+                "content": f"指令设置错误，请保持格式%instrs set 指令名称%"
+            }
+        }
+        return (message, None) , BotStatus.INSTRS_SET_FAILED
     
 
 class InstrsClsCommandStrategy(CommandStrategy):

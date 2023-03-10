@@ -83,6 +83,6 @@ class RekeyCommandStrategy(CommandStrategy):
 
 class UnknownCommandStrategy(CommandStrategy):
     def execute(self, robot, command_arg):
-        return "无法识别的指令"
+        return ("无法识别的指令" , None) , BotStatus.REPLY_ERROR
 
 
