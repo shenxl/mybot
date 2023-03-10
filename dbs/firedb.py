@@ -53,13 +53,13 @@ class Bots:
             self.db = db
         self.collection_name = collection_name
 
-    def add_bot(self, robot_key, chat_id, hook):
+    def add_bot(self, robot_key, user_id, hook):
         doc_ref = self.db.collection(self.collection_name)
         doc_ref = doc_ref.document(robot_key)
         
         doc_ref.set({
             u"robot_key": robot_key,
-            u"chat_id": chat_id,
+            u"user_id": user_id,
             u"hook": hook,
             u"created": firestore.SERVER_TIMESTAMP
         })
@@ -108,14 +108,15 @@ class Chats:
             self.db = db
         self.collection_name = collection_name
 
-    def add_message(self, userID, role, content,robot_key, parentid=None):
+    def add_message(self, user_id, role, content, robot_key, usage=None, parent_id=None):
         doc_ref = self.db.collection(self.collection_name).document()
         doc_ref.set({
-            u"userID": userID,
+            u"user_id": user_id,
             u"role": role,
+            u"usage": usage,
             u"content": content,
             u"robot_key":robot_key,
-            u"parentid": parentid if parentid is not None else '',
+            u"parent_id": parent_id if parent_id is not None else '',
             u"created": firestore.SERVER_TIMESTAMP,
         })
         return doc_ref.id
@@ -126,26 +127,35 @@ class Chats:
         
         doc_ref.delete()
         
-    def get_by_userID(self, userID):
+    def get_by_userID(self, user_id):
         query = self.db.collection(self.collection_name)
-        query = query.where(u"userID", "==", userID)
+        query = query.where(u"user_id", "==", user_id)
         query = query.order_by(u"created")
         
         docs = query.stream()
         return [doc.to_dict() for doc in docs]
     
-    def get_by_role(self, userID, role):
+    def get_by_role(self, user_id, role):
         query = self.db.collection(self.collection_name)
-        query = query.where(u"userID", "==", userID)
+        query = query.where(u"user_id", "==", user_id)
         query = query.where(u"role", "==", role)
         query = query.order_by(u"created")
         
         docs = query.stream()
         return [doc.to_dict() for doc in docs]
     
-    def clear_by_userID(self, userID):
+    def get_by_bot_and_user(self, user_id, robot_key):
         query = self.db.collection(self.collection_name)
-        query = query.where(u"userID", "==", userID)
+        query = query.where(u"user_id", "==", user_id)
+        query = query.where(u"robot_key", "==", robot_key)
+        query = query.order_by(u"created")
+        
+        docs = query.stream()
+        return [doc.to_dict() for doc in docs]
+    
+    def clear_by_userID(self, user_id):
+        query = self.db.collection(self.collection_name)
+        query = query.where(u"user_id", "==", user_id)
         
         docs = query.stream()
         for doc in docs:

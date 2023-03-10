@@ -10,7 +10,7 @@ from commands.message import MessageCommandStrategy
 
 class TestCommandExecutor(unittest.TestCase):
     def setUp(self):
-        rebot = {
+        robot = {
             "userID": "user2",
             "robot_key": "robot1",
             "role": "assistant",
@@ -20,12 +20,12 @@ class TestCommandExecutor(unittest.TestCase):
         
         self.executor = CommandExecutor()
         # self.executor.add_strategy(CommandType.CHATS_CLS, ChatsClsCommandStrategy())
-        self.executor.add_strategy(CommandType.INIT, InitCommandStrategy(rebot=rebot))
+        self.executor.add_strategy(CommandType.INIT, InitCommandStrategy())
         # self.executor.add_strategy(CommandType.INSTRS, InstrsCommandStrategy())
         # self.executor.add_strategy(CommandType.INSTRS_SET, InstrsSetCommandStrategy())
         # self.executor.add_strategy(CommandType.INSTRS_CLS, InstrsClsCommandStrategy())
-        self.executor.add_strategy(CommandType.REKEY, RekeyCommandStrategy(rebot=rebot))
-        self.executor.add_strategy(CommandType.MSG, MessageCommandStrategy(rebot=rebot))
+        self.executor.add_strategy(CommandType.REKEY, RekeyCommandStrategy())
+        self.executor.add_strategy(CommandType.MSG, MessageCommandStrategy())
         # self.executor.add_strategy(CommandType.HELP, HelpCommandStrategy())
 
     # def test_chats_cls(self):
@@ -41,7 +41,15 @@ class TestCommandExecutor(unittest.TestCase):
     #         self.executor.execute("@xxx %chat cls abc%")
 
     def test_init(self):
-        result = self.executor.execute("@xxx %init%")
+        robot = {
+            "userID": "user2",
+            "robot_key": "robot1",
+            "role": "assistant",
+            "content": "content2",
+            "parentid": None,
+        }
+        
+        result = self.executor.execute(robot, "@xxx %init%")
         self.assertEqual(result, "机器人user2已初始化完成")
 
     # def test_instrs(self):
@@ -71,7 +79,15 @@ class TestCommandExecutor(unittest.TestCase):
     #     self.assertEqual(result, "所有指令已清除。")
 
     def test_rekey(self):
-        result = self.executor.execute("@xxx %rekey%")
+        robot = {
+            "userID": "user2",
+            "robot_key": "robot1",
+            "role": "assistant",
+            "content": "content2",
+            "parentid": None,
+        }
+        
+        result = self.executor.execute(robot, "@xxx %rekey%")
         self.assertEqual(result, "user2秘钥更换完成")
 
     # def test_help(self):
@@ -80,7 +96,15 @@ class TestCommandExecutor(unittest.TestCase):
     #     self.assertIn("init", result)
         
     def test_message(self):
-        result = self.executor.execute("@xxx hello world")
+        robot = {
+            "userID": "user2",
+            "robot_key": "robot1",
+            "role": "assistant",
+            "content": "content2",
+            "parentid": None,
+        }
+        
+        result = self.executor.execute(robot, "@xxx hello world")
         self.assertEqual(result, "user2say:hello world")
 
 if __name__ == '__main__':

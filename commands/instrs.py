@@ -2,7 +2,7 @@ from .executor import CommandStrategy, CommandType
 
 # TODO： 思考指令相关的逻辑
 class InstrsCommandStrategy(CommandStrategy):
-    def __init__(self, executor):
+    def __init__(self, robot, executor):
         self.executor = executor
         
     def execute(self, command_arg):
@@ -19,10 +19,10 @@ class InstrsCommandStrategy(CommandStrategy):
 
         
 class InstrsSetCommandStrategy(CommandStrategy):
-    def __init__(self, executor):
+    def __init__(self, robot, executor):
         self.executor = executor
 
-    def execute(self, command_arg):
+    def execute(self, robot, command_arg):
         parts = command_arg.split(maxsplit=1)
         command_type_str = parts[0].upper()
         if len(parts) > 1:
@@ -40,7 +40,7 @@ class InstrsSetCommandStrategy(CommandStrategy):
     
 
 class InstrsClsCommandStrategy(CommandStrategy):
-    def __init__(self, executor):
+    def __init__(self, robot, executor):
         self.executor = executor
 
     def execute(self, command_arg):

@@ -21,8 +21,6 @@ class chatbot:
             "model": self.model_engine
         }
         response = openai.ChatCompletion.create(**request_body)
-        # logger.info(json.dumps(response))
-        
         if 'choices' in response and response['choices']:
             text = response['choices'][0]['message']['content']
             usage = response['usage']
@@ -33,7 +31,8 @@ class chatbot:
     # 当内容过多的时候，进行主题提炼
     def get_topic_summary(self, message):
         # TODO 压缩方面需要进一步优化
-        sum_prompt = {"role":"user","content":"对上述对话中涉及的所有内容进行提炼总结,并返回总结内容"}
+        sum_prompt = '对上述对话中, 涉及的所有内容进行要点提炼总结,并返回。注意！返回内容需简短明确，涵盖对话的所有内容，以便于我们后续的对话'
+        sum_prompt = {"role":"user","content": sum_prompt}
         message.append(sum_prompt)
         return self.chat(message)
 
