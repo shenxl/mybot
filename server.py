@@ -49,7 +49,7 @@ if __name__ == "__main__":
         app.run(debug=True)
     else:
         # 生产环境下使用 nohup 启动 Gunicorn 服务器并写入 pid 文件
-        cmd = f"gunicorn server:app -w {args.workers} -b {args.bind} --access-logfile {args.log_path}"
+        cmd = f"gunicorn server:app -w {args.workers} -b {args.bind}"
         pid_file = "gunicorn.pid"
         with open(pid_file, "w") as f:
-            subprocess.Popen(f"nohup {cmd} > /dev/null 2>&1 & echo $!", shell=True, stdout=f)
+            subprocess.Popen(f"nohup {cmd} >{args.log_path} 2>&1 &", shell=True, stdout=f)
