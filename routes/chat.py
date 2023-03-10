@@ -51,23 +51,23 @@ class Chat(Resource):
         replybot = replyBot(data, key)
         content = replybot.content
         
-        # try:
-        # # 执行策略
-        #     (message, paylopad), status = executor.execute(replybot, content)
-        # except Exception as e:
-        #     message = {
-        #             "msgtype": "text",
-        #             "text": {
-        #                 "content": f"{e}"
-        #             }
-        #         }
-        #     status = BotStatus.Exception
-        #     paylopad = e
+        try:
+        # 执行策略
+            (message, paylopad), status = executor.execute(replybot, content)
+        except Exception as e:
+            message = {
+                    "msgtype": "text",
+                    "text": {
+                        "content": f"{e}"
+                    }
+                }
+            status = BotStatus.Exception
+            paylopad = e
         # 进行答复
         
         
-        # 执行策略
-        (message, paylopad), status = executor.execute(replybot, content)
+        # # 执行策略
+        # (message, paylopad), status = executor.execute(replybot, content)
         replybot.reply(message)
         
         

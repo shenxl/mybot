@@ -14,10 +14,12 @@ class ChatsClsCommandStrategy(CommandStrategy):
     
     def execute(self, robot, command_arg):
         chats.clear_by_robot(robot_key=robot["robot_key"])
+        title = "🤖 <font color='#404040'>清理完成</font>"
+        info = "🗑️ 对话内容已经全部清理"
         message = {
             "msgtype": "markdown",
             "markdown": {
-                "text": f"指令设置错误，请保持格式%instrs set 指令名称 指令描述%"
+                "text": f"#### {title}  \n\n##### {info}"
             }
         }
         return (message, None) , BotStatus.CLEAR_ALL_CHATS
