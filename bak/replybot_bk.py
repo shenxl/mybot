@@ -10,7 +10,7 @@ from conf.config import get_config
 from logs.logger import Logger
 from dbs.bots import Bots
 from dbs.chats import Chats 
-from .chatbot import chatbot
+from ..app.chatbot import chatbot
 from commands.parse import CommandType ,parse_command
 
 

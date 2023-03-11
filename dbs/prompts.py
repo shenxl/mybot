@@ -92,4 +92,5 @@ class Prompts:
 
     # 获取压缩 system 指令, 压缩指令与 robot_key \ channel 相关。
     def get_summary_prompt(self, robot_key, channel=None):
+        
         return self.get_prompts(create_tag="summary", robot_key=robot_key , channel=channel)

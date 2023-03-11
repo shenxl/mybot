@@ -24,10 +24,12 @@ class MessageCommandStrategy(CommandStrategy):
             inter_prompts = prompts.get_systems_prompt()
 
             user_prompts = prompts.get_prompts(robot_key=robot["robot_key"])
-            # TODO: 补充 channel 逻辑  
+            # TODO: 补充 channel 逻辑
+            # TODO: 目前默认只取压缩 prompt 的最后 5条，后续可以再做压缩。
             summary_prompts = prompts.get_summary_prompt(robot_key=robot["robot_key"])
+            last_five_summary_prompts = summary_prompts if len(summary_prompts) < 5 else summary_prompts[-5:]
             # 将三个数组合并成一个并保持顺序
-            chain_prompts = list(chain(inter_prompts, user_prompts, summary_prompts))
+            chain_prompts = list(chain(inter_prompts, user_prompts, last_five_summary_prompts))
             for prompt in chain_prompts:
                 chat_prompts.append({
                     "role": "system",

@@ -8,6 +8,7 @@ from app.botstatus import BotStatus
 from logs.logger import Logger
 
 from dbs.chats import Chats
+from dbs.prompts import Prompts
 
 
 # 加载策略
@@ -39,6 +40,7 @@ executor.set_instruction_desc(CommandType.INSTRS_SET,"输入%instrs set >指令�
 logger = Logger(__name__)
 chatbot = chatbot()
 chats = Chats()
+prompts = Prompts()
 class Chat(Resource):
     def get(self, key):
         return {"result": "ok"}
@@ -81,13 +83,19 @@ class Chat(Resource):
                     # 清理之前的提示信息,并附加最新的
                     # TODO 后续将 system 与 其他 role 的做区分
                     chats.clear_by_robot(robot_key=replybot.robot_key)
-                    chats.add_message(
-                        user_id = "summary",
-                        role = "system",
-                        content = answer,
-                        robot_key = replybot.robot_key,
-                        usage = usage["total_tokens"]
-                        )
+                    prompts.add_prompt(
+                        create_tag = replybot.user_id,
+                        catagory = "summary",
+                        promot = answer,
+                        robot_key = replybot.robot_key 
+                    )
+                    # chats.add_message(
+                    #     user_id = "summary",
+                    #     role = "system",
+                    #     content = answer,
+                    #     robot_key = replybot.robot_key,
+                    #     usage = usage["total_tokens"]
+                    #     )
                     status = BotStatus.COMPRESSED
                 else:
                     status = BotStatus.COMPRESSION_FAILED
