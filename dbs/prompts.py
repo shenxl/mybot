@@ -93,4 +93,15 @@ class Prompts:
     # 获取压缩 system 指令, 压缩指令与 robot_key \ channel 相关。
     def get_summary_prompt(self, robot_key, channel=None):
         
-        return self.get_prompts(create_tag="summary", robot_key=robot_key , channel=channel)
+        query = self.db.collection(self.collection_name)
+        query = query.where(u"catagory", "==", "summary")
+        if robot_key is not None:
+            query = query.where(u"robot_key", "==", robot_key)
+        if channel is not None:
+            query = query.where(u"channel", "==", channel)
+            
+        query = query.order_by(u"created",direction=firestore.Query.DESCENDING).limit(1)
+        
+        docs = query.stream()
+        return [doc.to_dict() for doc in docs]
+        

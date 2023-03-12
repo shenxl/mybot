@@ -53,23 +53,23 @@ class Chat(Resource):
         replybot = replyBot(data, key)
         content = replybot.content
         
-        try:
-        # 执行策略
-            (message, paylopad), status = executor.execute(replybot, content)
-        except Exception as e:
-            message = {
-                    "msgtype": "text",
-                    "text": {
-                        "content": f"{e}"
-                    }
-                }
-            status = BotStatus.Exception
-            paylopad = e
-        # 进行答复
+        # try:
+        # # 执行策略
+        #     (message, paylopad), status = executor.execute(replybot, content)
+        # except Exception as e:
+        #     message = {
+        #             "msgtype": "text",
+        #             "text": {
+        #                 "content": f"{e}"
+        #             }
+        #         }
+        #     status = BotStatus.Exception
+        #     paylopad = e
+        # # 进行答复
         
         
         # # 执行策略
-        # (message, paylopad), status = executor.execute(replybot, content)
+        (message, paylopad), status = executor.execute(replybot, content)
         replybot.reply(message)
         
         
@@ -77,7 +77,7 @@ class Chat(Resource):
         if status == BotStatus.REPLY:
             prompt = paylopad
             tokens = chatbot.num_tokens_from_messages(prompt)
-            if tokens > 2048:
+            if tokens > 20 :
                 (status, answer, usage) = chatbot.get_topic_summary(prompt)
                 if status == "success":
                     # 清理之前的提示信息,并附加最新的
