@@ -77,7 +77,7 @@ class Chat(Resource):
         if status == BotStatus.REPLY:
             prompt = paylopad
             tokens = chatbot.num_tokens_from_messages(prompt)
-            if tokens > 20 :
+            if tokens > 2048 :
                 (status, answer, usage) = chatbot.get_topic_summary(prompt)
                 if status == "success":
                     # 清理之前的提示信息,并附加最新的
