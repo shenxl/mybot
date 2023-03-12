@@ -25,20 +25,21 @@ class MessageCommandStrategy(CommandStrategy):
 
             user_prompts = prompts.get_prompts(robot_key=robot["robot_key"])
             # TODO: 补充 channel 逻辑
-            # TODO: 目前默认只取压缩 prompt 的最后 5条，后续可以再做压缩。
+            # TODO: 目前默认只取压缩 prompt 的最后 1 条，后续可以再做压缩。
             summary_prompts = prompts.get_summary_prompt(robot_key=robot["robot_key"])
             # 将三个数组合并成一个并保持顺序
             chain_prompts = list(chain(inter_prompts, user_prompts, summary_prompts))
 
             # logger.info(f"inter_prompts:{inter_prompts}")
             # logger.info(f"user_prompts:{user_prompts}")
-            # logger.info(f"last_five_summary_prompts:{summary_prompts}")
+            # logger.info(f"summary_prompts:{summary_prompts}")
+            
             for prompt in chain_prompts:
                 chat_prompts.append({
                     "role": "system",
                     "content": prompt["promot"]
                 })
-            logger.info(f"chain_prompts:{chain_prompts}")
+            
             messages = chats.get_chats(user_id=robot["user_id"],robot_key=robot["robot_key"])
 
             for message in messages:
@@ -53,7 +54,9 @@ class MessageCommandStrategy(CommandStrategy):
             chat_prompts.append({
                 "role": "user",
                 "content": command_arg
-            })        
+            })
+            
+            logger.info(f"最终的 chat_prompts 为:{chat_prompts}")
             
             (status,answer,usage) = chatbot.chat(chat=chat_prompts)
             
