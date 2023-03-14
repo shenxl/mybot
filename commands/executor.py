@@ -65,7 +65,7 @@ class HelpCommandStrategy(CommandStrategy):
             desc_list = [f"- <font color='#FF0000'>**{command_type.name.lower()}**</font> 指令 - {self.executor.instruction_desc[command_type]}"
                         for command_type in CommandType if self.executor.instruction_desc[command_type]]
             title = "📖<font color='#1E90FF'>帮助</font>"
-            info = "\n\n".join(desc_list)
+            info = "\n".join(desc_list)
             message = {
                 "msgtype": "markdown",
                 "markdown": {
