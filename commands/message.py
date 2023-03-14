@@ -56,7 +56,7 @@ class MessageCommandStrategy(CommandStrategy):
                 "content": command_arg
             })
             
-            logger.info(f"最终的 chat_prompts 为:{chat_prompts}")
+            # logger.info(f"最终的 chat_prompts 为:{chat_prompts}")
             
             (status,answer,usage) = chatbot.chat(chat=chat_prompts)
             

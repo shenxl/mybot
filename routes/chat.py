@@ -33,6 +33,7 @@ executor.add_strategy(CommandType.MSG, MessageCommandStrategy())
 executor.add_strategy(CommandType.HELP, HelpCommandStrategy(executor))
 
 executor.set_instruction_desc(CommandType.HELP,"输入%help%, 显示所有指令列表。")
+executor.set_instruction_desc(CommandType.CHATS_CLS,"输入%chats cls%, 会清除当前bot中所有的聊天记录")
 executor.set_instruction_desc(CommandType.INIT,"输入%init%, 初始化机器人。**必须在回调中附加send key**")
 executor.set_instruction_desc(CommandType.INSTRS_SET,"输入%instrs set >指令名< 指令描述%, 设置指令。")
 
